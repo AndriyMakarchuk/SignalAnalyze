@@ -428,3 +428,4 @@ FodyWeavers.xsd
 *.msp
 *.un~
 *.swp
+.vs/
