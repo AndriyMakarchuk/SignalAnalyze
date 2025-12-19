@@ -1,12 +1,12 @@
 ﻿// cepel2.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
 #include<stdio.h>
 #include<math.h>
+#include"InputOutput.h"
+
 
 void derivative(double* y, double* dy_r, int n, double h);
-double* readArrayFromFile(const char* fileName, int* arraySizeOut);
 double* calcNpropValues(double* funcValues, int size);
 
 int main()
@@ -130,35 +130,6 @@ void derivative(double* y, double* dy_r, int n, double h)
 	free(dy4);
 	free(dy5);
 	free(dy6);
-}
-
-double* readArrayFromFile(const char* fileName, int* arraySizeOut) {
-	FILE* fp;
-
-	fopen_s(&fp, fileName, "r");
-
-	char buffer[100];
-
-	int counter = 0;
-
-	while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-		counter++;
-	}
-
-	double* result = (double*)calloc(counter, sizeof(double));
-	counter = 0;
-
-	rewind(fp);
-
-	while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-		result[counter] = atof(buffer);
-		counter++;
-	}
-
-	*arraySizeOut = counter;
-
-	fclose(fp);
-	return result;
 }
 
 double* calcNpropValues(double* funcValues, int size) {
