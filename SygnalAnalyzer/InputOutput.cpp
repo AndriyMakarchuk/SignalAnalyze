@@ -2,10 +2,44 @@
 #pragma once
 #include <iostream>
 
-static void CheckFileExistence(FILE* fp, const char* fileName);
+static void checkFileExistence(FILE* fp, const char* fileName);
+
+void addSignal(const char* signalName, double* values, int valuesLength) {
+	FILE* fp;
+
+	if (signalName == nullptr) {
+		throw std::invalid_argument("Signal name is nullptr");
+	}
+	if (values == nullptr) {
+		throw std::invalid_argument("Values array is nullptr");
+	}
+
+	if (valuesLength <= 0) {
+		throw std::invalid_argument("Array size must be greater than 0");
+	}
+
+	fopen_s(&fp, signalName, "r");
+
+	if (fp != nullptr) {
+		fclose(fp);
+		throw std::invalid_argument("Signal already exists");
+	}
+
+	fopen_s(&fp, signalName, "w");
+	char buffer[25];
+	for (int i = 0; i < valuesLength; i++)
+	{
+		memset(buffer, 0, sizeof(buffer));
+		sprintf_s(buffer, "%f", values[i]);
+		fprintf_s(fp,buffer);
+		fprintf_s(fp, "\n");
+	}
+
+	fclose(fp);
+}
 
 double* readArrayFromFile(const char* fileName, int* arraySizeOut) {
-	if(fileName == nullptr)
+	if (fileName == nullptr)
 	{
 		throw std::invalid_argument("fileName is nullptr");
 	}
@@ -14,7 +48,7 @@ double* readArrayFromFile(const char* fileName, int* arraySizeOut) {
 
 	fopen_s(&fp, fileName, "r");
 
-	CheckFileExistence(fp, fileName);
+	checkFileExistence(fp, fileName);
 
 	char buffer[100];
 
@@ -40,7 +74,7 @@ double* readArrayFromFile(const char* fileName, int* arraySizeOut) {
 	return result;
 }
 
-static void CheckFileExistence(FILE* fp, const char* fileName) {
+static void checkFileExistence(FILE* fp, const char* fileName) {
 	if (fp == nullptr) {
 		char message[255];
 		try {
@@ -63,6 +97,4 @@ static void CheckFileExistence(FILE* fp, const char* fileName) {
 		}
 		throw std::invalid_argument(message);
 	}
-
-
 }

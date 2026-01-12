@@ -5,3 +5,4 @@
 #include <cstdlib>
 
 double* readArrayFromFile(const char* fileName, int* arraySizeOut);
+void addSignal(const char* signalName, double* values, int valuesLength);

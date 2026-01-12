@@ -123,11 +123,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="derivative.cpp" />
     <ClCompile Include="InputOutput.cpp" />
     <ClCompile Include="SygnalAnalyzer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="InputOutput.h" />
+    <ClInclude Include="inputOutput.h" />
+    <ClInclude Include="mathFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
