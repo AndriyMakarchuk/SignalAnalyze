@@ -20,10 +20,13 @@ int main()
 
 	double* nPropOrig = calcNpropValues(yOrig, origSize);
 	double* nPropInput = calcNpropValues(yInput, inputSize);
+	for (int i = 0; i < 10000000; i++) {
+
+	}
 
 	printf("Rechognized sygnals: \n");
 	bool atLeastOneSygnalFound = false;
-
+	
 	for (int i = 2; i < inputSize - 12; i++) {
 		if (abs(nPropInput[i] - nPropOrig[2]) < 0.02f * nPropInput[i]) {
 

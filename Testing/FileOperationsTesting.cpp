@@ -8,7 +8,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace InputOutput
 {
-	TEST_CLASS(SignalsAddingTesting)
+	TEST_CLASS(FileReadingTest)
 	{
 	public:
 
@@ -143,6 +143,21 @@ namespace InputOutput
 			std::remove(filename);
 
 			std::vector<double> values; // empty
+			Assert::ExpectException<std::invalid_argument>([&]() {
+				addSignal(filename, values.data(), 0);
+				});
+
+			std::remove(filename);
+		}
+
+
+
+		TEST_METHOD(TestAddSignal_ZeroSize)
+		{
+			const char* filename = "addsignal_empty.txt";
+			std::remove(filename);
+
+			std::vector<double> values = { 1.5, 2.25, -3.0, 0.0, 4.125 };
 			Assert::ExpectException<std::invalid_argument>([&]() {
 				addSignal(filename, values.data(), 0);
 				});
