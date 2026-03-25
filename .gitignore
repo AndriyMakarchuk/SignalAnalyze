@@ -430,3 +430,6 @@ FodyWeavers.xsd
 *.swp
 .vs/
 /SygnalAnalyzer/Intel® VTune™ Profiler Results/SygnalAnalyzer
+*.un
+*~
+
