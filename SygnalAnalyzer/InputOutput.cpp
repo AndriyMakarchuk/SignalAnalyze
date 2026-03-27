@@ -48,6 +48,10 @@ double* readArrayFromFile(const char* fileName, int* arraySizeOut) {
 
 	fopen_s(&fp, fileName, "r");
 
+	if (fp == nullptr) {
+		throw std::invalid_argument("failed to open file");
+	}
+
 	checkFileExistence(fp, fileName);
 
 	char buffer[100];
@@ -58,7 +62,12 @@ double* readArrayFromFile(const char* fileName, int* arraySizeOut) {
 		counter++;
 	}
 
-	double* result = (double*)calloc(counter, sizeof(double));
+	double* result = static_cast<double*>(calloc(counter, sizeof(double)));
+
+	if (result == nullptr) {
+		throw new std::system_error(std::error_code(), "Failed to allocate memory");
+	}
+
 	counter = 0;
 
 	rewind(fp);
@@ -74,7 +83,7 @@ double* readArrayFromFile(const char* fileName, int* arraySizeOut) {
 	return result;
 }
 
-static void checkFileExistence(FILE* fp, const char* fileName) {
+static void checkFileExistence(const FILE* fp, const char* fileName) {
 	if (fp == nullptr) {
 		char message[255];
 		try {
@@ -82,18 +91,18 @@ static void checkFileExistence(FILE* fp, const char* fileName) {
 			strcat_s(message, fileName);
 			strcat_s(message, " wasn't found");
 		}
-		catch (std::exception e) {
+		catch (const std::exception* e) {
 			char longMessage[2048];
 			try {
-				strcpy_s(message, "File with name ");
-				strcat_s(message, fileName);
-				strcat_s(message, " wasn't found");
+				strcpy_s(longMessage, "File with name ");
+				strcat_s(longMessage, fileName);
+				strcat_s(longMessage, " wasn't found");
 			}
-			catch (std::exception e)
+			catch (const std::exception* e1)
 			{
 				throw std::invalid_argument("File name is too long");
 			}
-			throw std::invalid_argument(message);
+			throw std::invalid_argument(longMessage);
 		}
 		throw std::invalid_argument(message);
 	}
