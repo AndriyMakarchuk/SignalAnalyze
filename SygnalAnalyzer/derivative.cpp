@@ -2,7 +2,7 @@
 #include "mathFunctions.h"
 #include <iostream>
 
-void derivative(double* y, double* dy_r, int n, double h) {
+void derivative(const double* y, double* dy_r, int n, double h) {
 	int i;
 
 	if (n < 6) {
@@ -13,12 +13,12 @@ void derivative(double* y, double* dy_r, int n, double h) {
 		throw std::invalid_argument("Exception: array pointer is nullptr");
 	}
 
-	double* dy1 = (double*)calloc(n, sizeof(double));
-	double* dy2 = (double*)calloc(n, sizeof(double));
-	double* dy3 = (double*)calloc(n, sizeof(double));
-	double* dy4 = (double*)calloc(n, sizeof(double));
-	double* dy5 = (double*)calloc(n, sizeof(double));
-	double* dy6 = (double*)calloc(n, sizeof(double));
+	double* dy1 = static_cast<double*>(calloc(n, sizeof(double)));
+	double* dy2 = static_cast<double*>(calloc(n, sizeof(double)));
+	double* dy3 = static_cast<double*>(calloc(n, sizeof(double)));
+	double* dy4 = static_cast<double*>(calloc(n, sizeof(double)));
+	double* dy5 = static_cast<double*>(calloc(n, sizeof(double)));
+	double* dy6 = static_cast<double*>(calloc(n, sizeof(double)));
 
 	for (i = 0; i < n - 1; i++)
 	{
@@ -59,7 +59,7 @@ void derivative(double* y, double* dy_r, int n, double h) {
 
 
 double* derivative(double* y, int n, double h) {
-	double* result = (double*)calloc(n - 6, sizeof(double));
+	double* result = static_cast<double*>(calloc(n - 6, sizeof(double)));
 
 	derivative(y, result, n, h);
 

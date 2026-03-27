@@ -26,14 +26,14 @@ int main()
 		printf("Reading error. Each file must contain only numbers, and at least 13 numbers");
 		return 1;
 	}
-	catch (const std::system_error e) {
+	catch (const std::system_error* e) {
 		printf("System error:");
-		printf(e.what());
+		printf(e->what());
 		return 2;
 	}
-	catch (const std::exception e) {
+	catch (const std::exception* e) {
 		printf("Internal error: ");
-		printf(e.what());
+		printf(e->what());
 		return 3;
 	}
 
@@ -108,9 +108,22 @@ double* calcNpropValues(double* funcValues, int size) {
 		throw std::invalid_argument("Can not calculate nprop values. At least 13 values required");
 	}
 
-	double* result = (double*)tryCalloc(size, sizeof(double));
-	double* der1 = (double*)tryCalloc(size - 6, sizeof(double));
-	double* der2 = (double*)tryCalloc(size - 12, sizeof(double));
+	double* result;
+	double* der1;
+	double* der2;
+
+	try {
+		result = static_cast<double*>(tryCalloc(size, sizeof(double)));
+		der1 = static_cast<double*>(tryCalloc(size - 6, sizeof(double)));
+		der2 = static_cast<double*>(tryCalloc(size - 12, sizeof(double)));
+	}
+	catch (const _exception* e) {
+		tryFree(result);
+		tryFree(der1);
+		tryFree(der2);
+
+		throw;
+	}
 	derivative(funcValues, der1, size, 1);
 	derivative(der1, der2, size - 6, 1);
 
@@ -131,9 +144,15 @@ double* calcNpropValues(double* funcValues, int size) {
 void* tryCalloc(size_t count, size_t size) {
 	void* result = calloc(count, size);
 
-	if (result == nullptr){
+	if (result == nullptr) {
 		throw std::system_error(std::error_code(), "Failed memory allocation");
 	}
 
 	return result;
+}
+
+void tryFree(void* ptr) {
+	if (ptr != nullptr) {
+		free(ptr);
+	}
 }
