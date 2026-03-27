@@ -20,6 +20,22 @@ void derivative(const double* y, double* dy_r, int n, double h) {
 	double* dy5 = static_cast<double*>(calloc(n, sizeof(double)));
 	double* dy6 = static_cast<double*>(calloc(n, sizeof(double)));
 
+	if (dy1 == nullptr ||
+		dy2 == nullptr ||
+		dy3 == nullptr ||
+		dy4 == nullptr ||
+		dy5 == nullptr ||
+		dy6 == nullptr) {
+		tryFree(dy1);
+		tryFree(dy2);
+		tryFree(dy3);
+		tryFree(dy4);
+		tryFree(dy5);
+		tryFree(dy6);
+
+		throw new std::system_error(std::error_code(), "Memory allocation failed");
+	}
+
 	for (i = 0; i < n - 1; i++)
 	{
 		dy1[i] = y[i + 1] - y[i];
@@ -64,4 +80,10 @@ double* derivative(double* y, int n, double h) {
 	derivative(y, result, n, h);
 
 	return result;
+}
+
+void tryFree(void* ptr) {
+	if (ptr != nullptr) {
+		free(ptr);
+	}
 }
