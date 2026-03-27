@@ -1,7 +1,4 @@
-﻿// cepel2.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#include<stdio.h>
+﻿#include<stdio.h>
 #include<math.h>
 #include"inputOutput.h"
 #include"mathFunctions.h"
@@ -18,15 +15,31 @@ int main()
 	yOrig = readArrayFromFile("orig.txt", &origSize);
 	yInput = readArrayFromFile("Input.txt", &inputSize);
 
-	double* nPropOrig = calcNpropValues(yOrig, origSize);
-	double* nPropInput = calcNpropValues(yInput, inputSize);
-	for (int i = 0; i < 10000000; i++) {
+	double* nPropOrig;
+	double* nPropInput;
 
+	try {
+		nPropOrig = calcNpropValues(yOrig, origSize);
+		nPropInput = calcNpropValues(yInput, inputSize);
+	}
+	catch (const std::invalid_argument* e) {
+		printf("Reading error. Each file must contain only numbers, and at least 13 numbers");
+		return 1;
+	}
+	catch (const std::system_error e) {
+		printf("System error:");
+		printf(e.what());
+		return 2;
+	}
+	catch (const std::exception e) {
+		printf("Internal error: ");
+		printf(e.what());
+		return 3;
 	}
 
 	printf("Rechognized sygnals: \n");
 	bool atLeastOneSygnalFound = false;
-	
+
 	for (int i = 2; i < inputSize - 12; i++) {
 		if (abs(nPropInput[i] - nPropOrig[2]) < 0.02f * nPropInput[i]) {
 
@@ -92,12 +105,12 @@ int main()
 
 double* calcNpropValues(double* funcValues, int size) {
 	if (size < 13) {
-		throw("Can not calculate nprop values. At least 13 values required");
+		throw std::invalid_argument("Can not calculate nprop values. At least 13 values required");
 	}
 
-	double* result = (double*)calloc(size, sizeof(double));
-	double* der1 = (double*)calloc(size - 6, sizeof(double));
-	double* der2 = (double*)calloc(size - 12, sizeof(double));
+	double* result = (double*)tryCalloc(size, sizeof(double));
+	double* der1 = (double*)tryCalloc(size - 6, sizeof(double));
+	double* der2 = (double*)tryCalloc(size - 12, sizeof(double));
 	derivative(funcValues, der1, size, 1);
 	derivative(der1, der2, size - 6, 1);
 
@@ -111,6 +124,16 @@ double* calcNpropValues(double* funcValues, int size) {
 
 	free(der1);
 	free(der2);
+
+	return result;
+}
+
+void* tryCalloc(size_t count, size_t size) {
+	void* result = calloc(count, size);
+
+	if (result == nullptr){
+		throw std::system_error(std::error_code(), "Failed memory allocation");
+	}
 
 	return result;
 }
