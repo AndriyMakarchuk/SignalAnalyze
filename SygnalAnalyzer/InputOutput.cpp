@@ -2,8 +2,14 @@
 #pragma once
 #include <iostream>
 
-static void checkFileExistence(FILE* fp, const char* fileName);
+static void checkFileExistence(const FILE* fp, const char* fileName);
 
+/// <summary>
+/// Adds information about reference signal to file
+/// </summary>
+/// <param name="signalName">Name of signal. Will be used as file name</param>
+/// <param name="values">Array of values</param>
+/// <param name="valuesLength">Array length</param>
 void addSignal(const char* signalName, double* values, int valuesLength) {
 	FILE* fp;
 
@@ -38,6 +44,12 @@ void addSignal(const char* signalName, double* values, int valuesLength) {
 	fclose(fp);
 }
 
+/// <summary>
+/// Reads signal values from file
+/// </summary>
+/// <param name="fileName">file name</param>
+/// <param name="arraySizeOut">Pointer to variable, where array size will be written</param>
+/// <returns>Array of signal values</returns>
 double* readArrayFromFile(const char* fileName, int* arraySizeOut) {
 	if (fileName == nullptr)
 	{
@@ -83,6 +95,11 @@ double* readArrayFromFile(const char* fileName, int* arraySizeOut) {
 	return result;
 }
 
+/// <summary>
+/// Checks, whether file exists, and throws error, if not
+/// </summary>
+/// <param name="fp">pointer to file</param>
+/// <param name="fileName">file name</param>
 static void checkFileExistence(const FILE* fp, const char* fileName) {
 	if (fp == nullptr) {
 		char message[255];
