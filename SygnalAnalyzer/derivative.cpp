@@ -4,6 +4,13 @@
 
 void tryFreePointer(void* ptr);
 
+/// <summary>
+/// Calculates array of derivatives, using Newton-Gregory interpolation method
+/// </summary>
+/// <param name="y">Values array. Must be at least 6 elements long</param>
+/// <param name="dy_r">Pointer to where result will be written. Length is n - 6</param>
+/// <param name="n">array size</param>
+/// <param name="h">interpolation step</param>
 void derivative(const double* y, double* dy_r, int n, double h) {
 	int i;
 
