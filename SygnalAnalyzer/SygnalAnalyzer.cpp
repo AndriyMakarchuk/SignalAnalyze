@@ -5,6 +5,8 @@
 
 
 double* calcNpropValues(double* funcValues, int size);
+void* tryCalloc(size_t count, size_t size);
+void tryFree(void* ptr);
 
 int main()
 {
@@ -103,14 +105,20 @@ int main()
 	free(nPropOrig);
 }
 
+/// <summary>
+/// Calculates function disproportion values. Requires at least 13 values to calculate
+/// </summary>
+/// <param name="funcValues">Array of function values</param>
+/// <param name="size">Array size</param>
+/// <returns>Array of function disproportion values. Result array size is size - 12</returns>
 double* calcNpropValues(double* funcValues, int size) {
 	if (size < 13) {
 		throw std::invalid_argument("Can not calculate nprop values. At least 13 values required");
 	}
 
-	double* result;
-	double* der1;
-	double* der2;
+	double* result = nullptr;
+	double* der1 = nullptr;;
+	double* der2 = nullptr;;
 
 	try {
 		result = static_cast<double*>(tryCalloc(size, sizeof(double)));
@@ -141,6 +149,12 @@ double* calcNpropValues(double* funcValues, int size) {
 	return result;
 }
 
+/// <summary>
+/// Tries to allocate memory. Throws exception if allocation failed and nullptr was returned
+/// </summary>
+/// <param name="count">objects count</param>
+/// <param name="size">size of the single object</param>
+/// <returns>Allocate memory</returns>
 void* tryCalloc(size_t count, size_t size) {
 	void* result = calloc(count, size);
 
@@ -151,6 +165,10 @@ void* tryCalloc(size_t count, size_t size) {
 	return result;
 }
 
+/// <summary>
+/// Cleans memory if pointer is not nullptr
+/// </summary>
+/// <param name="ptr">pointer to memory</param>
 void tryFree(void* ptr) {
 	if (ptr != nullptr) {
 		free(ptr);

@@ -2,6 +2,8 @@
 #include "mathFunctions.h"
 #include <iostream>
 
+void tryFreePointer(void* ptr);
+
 void derivative(const double* y, double* dy_r, int n, double h) {
 	int i;
 
@@ -26,12 +28,12 @@ void derivative(const double* y, double* dy_r, int n, double h) {
 		dy4 == nullptr ||
 		dy5 == nullptr ||
 		dy6 == nullptr) {
-		tryFree(dy1);
-		tryFree(dy2);
-		tryFree(dy3);
-		tryFree(dy4);
-		tryFree(dy5);
-		tryFree(dy6);
+		tryFreePointer(dy1);
+		tryFreePointer(dy2);
+		tryFreePointer(dy3);
+		tryFreePointer(dy4);
+		tryFreePointer(dy5);
+		tryFreePointer(dy6);
 
 		throw new std::system_error(std::error_code(), "Memory allocation failed");
 	}
@@ -82,7 +84,7 @@ double* derivative(double* y, int n, double h) {
 	return result;
 }
 
-void tryFree(void* ptr) {
+void tryFreePointer(void* ptr) {
 	if (ptr != nullptr) {
 		free(ptr);
 	}

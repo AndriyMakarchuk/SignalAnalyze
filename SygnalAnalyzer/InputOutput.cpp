@@ -2,8 +2,14 @@
 #pragma once
 #include <iostream>
 
-static void checkFileExistence(FILE* fp, const char* fileName);
+static void checkFileExistence(const FILE* fp, const char* fileName);
 
+/// <summary>
+/// Adds information about reference signal to file
+/// </summary>
+/// <param name="signalName">Name of signal. Will be used as file name</param>
+/// <param name="values">Array of values</param>
+/// <param name="valuesLength">Array length</param>
 void addSignal(const char* signalName, double* values, int valuesLength) {
 	FILE* fp;
 
